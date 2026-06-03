@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Splitz</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+
+<div class="splash-content">
+
+<div class="logo">💜</div>
+
+<h1>SPLITZ</h1>
+
+<p>Good Vibes, Clear Bills</p>
+
+</div>
+
+</div>
+
+<!-- LOGIN -->
+<section id="loginPage" class="page active">
+
+<div class="auth-card">
+
+<h1>Splitz</h1>
+
+<p>Login untuk melanjutkan</p>
+
+<input id="loginEmail" type="email" placeholder="Email">
+
+<input id="loginPassword" type="password" placeholder="Password">
+
+<button onclick="login()">
+Masuk
+</button>
+
+<div class="auth-link">
+
+Belum punya akun?
+
+<span onclick="showRegister()">
+Daftar
+</span>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- REGISTER -->
+<section id="registerPage" class="page">
+
+<div class="auth-card">
+
+<h1>Buat Akun</h1>
+
+<input id="regName" placeholder="Nama Lengkap">
+
+<input id="regEmail" placeholder="Email">
+
+<input id="regPassword" type="password" placeholder="Password">
+
+<button onclick="register()">
+Daftar
+</button>
+
+<div class="auth-link">
+
+Sudah punya akun?
+
+<span onclick="showLogin()">
+Login
+</span>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- APP -->
+<section id="appPage" class="page">
+
+<!-- HOME -->
+<div id="homeTab" class="tab active-tab">
+
+<div class="hero-card">
+
+<h2 id="welcomeText">
+Hai 👋
+</h2>
+
+<p>Kelola Split Bill dengan mudah</p>
+
+<div class="hero-amount">
+
+<h3>Total Pengeluaran</h3>
+
+<h1 id="dashboardTotal">
+Rp0
+</h1>
+
+</div>
+
+</div>
+
+<div class="stats-grid">
+
+<div class="stat-card">
+<h3 id="totalGroups">0</h3>
+<p>Grup</p>
+</div>
+
+<div class="stat-card">
+<h3 id="totalTransactions">0</h3>
+<p>Transaksi</p>
+</div>
+
+<div class="stat-card">
+<h3 id="paidMembers">0</h3>
+<p>Lunas</p>
+</div>
+
+<div class="stat-card">
+<h3 id="activeBillsCount">0</h3>
+<p>Tagihan</p>
+</div>
+
+</div>
+
+<div class="quick-menu">
+
+<div class="menu-card">
+👥
+<span>Group</span>
+</div>
+
+<div class="menu-card">
+💸
+<span>Split Bill</span>
+</div>
+
+<div class="menu-card">
+📜
+<span>Riwayat</span>
+</div>
+
+<div class="menu-card">
+🏆
+<span>Points</span>
+</div>
+
+</div>
+
+<div class="section">
+
+<div class="section-header">
+
+<h3>Grup Kamu</h3>
+
+</div>
+
+<div id="groupPreview">
+
+Belum ada grup
+
+</div>
+
+</div>
+
+</div>
+
+<!-- GROUP -->
+<div id="groupTab" class="tab">
+
+<div class="card">
+
+<h2>Buat Grup</h2>
+
+<input id="groupName" placeholder="Nama Grup">
+
+<div id="memberContainer">
+
+<input class="memberInput" placeholder="Nama Anggota">
+
+</div>
+
+<button onclick="addMember()">
+➕ Tambah Anggota
+</button>
+
+<button onclick="createGroup()">
+👥 Buat Grup
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>Daftar Grup</h3>
+
+<div id="groupList">
+
+Belum ada grup
+
+</div>
+
+</div>
+
+</div>
+<!-- SPLIT BILL -->
+<div id="splitTab" class="tab">
+
+<div class="card">
+
+<h2>Split Bill</h2>
+
+<input
+id="billName"
+placeholder="Nama Tagihan">
+
+<input
+id="billAmount"
+type="number"
+placeholder="Total Tagihan">
+
+<input
+id="taxAmount"
+type="number"
+placeholder="Pajak">
+
+<input
+id="serviceAmount"
+type="number"
+placeholder="Biaya Layanan">
+
+<button onclick="calculateBill()">
+
+💸 Hitung Split Bill
+
+</button>
+
+<div id="billResult"></div>
+
+</div>
+
+<div class="card">
+
+<h3>Status Pembayaran</h3>
+
+<div id="memberList">
+
+Belum pilih grup
+
+</div>
+
+<button onclick="remindAll()">
+
+🔔 Ingatkan Teman
+
+</button>
+
+</div>
+
+</div>
+
+<!-- ACTIVITY -->
+<div id="activityTab" class="tab">
+
+<div class="card">
+
+<h2>Recent Transactions</h2>
+
+<div id="historyList">
+
+Belum ada transaksi
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Active Bills</h2>
+
+<div id="activeBillsList">
+
+Belum ada tagihan aktif
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Badge & Points</h2>
+
+<div class="badge-grid">
+
+<div class="badge">
+
+🥉
+
+<p>Newbie</p>
+
+</div>
+
+<div class="badge">
+
+🥈
+
+<p>Smart Splitter</p>
+
+</div>
+
+<div class="badge">
+
+🥇
+
+<p>Bill Master</p>
+
+</div>
+
+</div>
+
+<div class="points-box">
+
+<h3>Total Points</h3>
+
+<h1 id="userPoints">
+
+0
+
+</h1>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Leaderboard</h2>
+
+<div id="leaderboardList">
+
+Belum ada data
+
+</div>
+
+</div>
+
+<button onclick="exportData()">
+
+📄 Export Laporan
+
+</button>
+
+</div>
+
+<!-- PROFILE -->
+<div id="profileTab" class="tab">
+
+<div class="card profile-card">
+
+<div class="profile-avatar">
+
+👤
+
+</div>
+
+<h2 id="profileName">
+
+User
+
+</h2>
+
+<p id="profileEmail">
+
+Email
+
+</p>
+
+<button onclick="logout()">
+
+Logout
+
+</button>
+
+</div>
+
+</div>
+
+<!-- NAVBAR -->
+<div class="navbar">
+
+<button onclick="openTab('homeTab')">
+
+🏠
+
+<span>Beranda</span>
+
+</button>
+
+<button onclick="openTab('groupTab')">
+
+👥
+
+<span>Grup</span>
+
+</button>
+
+<button onclick="openTab('splitTab')">
+
+💸
+
+<span>Split</span>
+
+</button>
+
+<button onclick="openTab('activityTab')">
+
+📜
+
+<span>Aktivitas</span>
+
+</button>
+
+<button onclick="openTab('profileTab')">
+
+👤
+
+<span>Profil</span>
+
+</button>
+
+</div>
+
+</section>
+
+<script src="script.js"></script>
+
+</body>
+</html>
