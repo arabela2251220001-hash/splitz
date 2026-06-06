@@ -1,46 +1,74 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Splitz</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link
+rel="preconnect"
+href="https://fonts.googleapis.com">
 
-<link rel="stylesheet" href="style.css">
+<link
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
+href="style.css">
+
 </head>
 
 <body>
 
 <!-- SPLASH -->
+
 <div id="splash">
 
 <div class="splash-content">
 
-<div class="logo">💜</div>
+<div class="logo">
+💜
+</div>
 
 <h1>SPLITZ</h1>
 
-<p>Good Vibes, Clear Bills</p>
+<p>
+Good Vibes, Clear Bills
+</p>
 
 </div>
 
 </div>
 
 <!-- LOGIN -->
-<section id="loginPage" class="page active">
+
+<section
+id="loginPage"
+class="page active">
 
 <div class="auth-card">
 
 <h1>Splitz</h1>
 
-<p>Login untuk melanjutkan</p>
+<p>
+Login untuk melanjutkan
+</p>
 
-<input id="loginEmail" type="email" placeholder="Email">
+<input
+id="loginName"
+placeholder="Nama">
 
-<input id="loginPassword" type="password" placeholder="Password">
+<input
+id="loginEmail"
+type="email"
+placeholder="Email">
 
 <button onclick="login()">
 Masuk
@@ -59,19 +87,28 @@ Daftar
 </div>
 
 </section>
-
 <!-- REGISTER -->
-<section id="registerPage" class="page">
+
+<section
+id="registerPage"
+class="page">
 
 <div class="auth-card">
 
 <h1>Buat Akun</h1>
 
-<input id="regName" placeholder="Nama Lengkap">
+<p>
+Daftar akun baru
+</p>
 
-<input id="regEmail" placeholder="Email">
+<input
+id="regName"
+placeholder="Nama Lengkap">
 
-<input id="regPassword" type="password" placeholder="Password">
+<input
+id="regEmail"
+type="email"
+placeholder="Email">
 
 <button onclick="register()">
 Daftar
@@ -92,10 +129,16 @@ Login
 </section>
 
 <!-- APP -->
-<section id="appPage" class="page">
+
+<section
+id="appPage"
+class="page">
 
 <!-- HOME -->
-<div id="homeTab" class="tab active-tab">
+
+<div
+id="homeTab"
+class="tab active-tab">
 
 <div class="hero-card">
 
@@ -103,7 +146,9 @@ Login
 Hai 👋
 </h2>
 
-<p>Kelola Split Bill dengan mudah</p>
+<p>
+Kelola Split Bill dengan mudah
+</p>
 
 <div class="hero-amount">
 
@@ -117,29 +162,57 @@ Rp0
 
 </div>
 
+<!-- STATISTIK -->
+
 <div class="stats-grid">
 
 <div class="stat-card">
-<h3 id="totalGroups">0</h3>
+
+<h3 id="totalGroups">
+0
+</h3>
+
 <p>Grup</p>
+
 </div>
 
 <div class="stat-card">
-<h3 id="totalTransactions">0</h3>
+
+<h3 id="totalTransactions">
+0
+</h3>
+
 <p>Transaksi</p>
+
 </div>
 
 <div class="stat-card">
-<h3 id="paidMembers">0</h3>
+
+<h3 id="paidMembers">
+0
+</h3>
+
 <p>Lunas</p>
+
 </div>
 
 <div class="stat-card">
-<h3 id="activeBillsCount">0</h3>
+
+<h3 id="activeBillsCount">
+0
+</h3>
+
 <p>Tagihan</p>
+
 </div>
 
 </div>
+
+<!-- REMINDER -->
+
+<div id="reminderBox"></div>
+
+<!-- MENU CEPAT -->
 
 <div class="quick-menu">
 
@@ -160,16 +233,20 @@ Rp0
 
 <div class="menu-card">
 🏆
-<span>Points</span>
+<span>Poin</span>
 </div>
 
 </div>
+
+<!-- PREVIEW GROUP -->
 
 <div class="section">
 
 <div class="section-header">
 
-<h3>Grup Kamu</h3>
+<h3>
+Grup Kamu
+</h3>
 
 </div>
 
@@ -182,19 +259,25 @@ Belum ada grup
 </div>
 
 </div>
+<!-- GROUP TAB -->
 
-<!-- GROUP -->
-<div id="groupTab" class="tab">
+<div
+id="groupTab"
+class="tab">
 
 <div class="card">
 
 <h2>Buat Grup</h2>
 
-<input id="groupName" placeholder="Nama Grup">
+<input
+id="groupName"
+placeholder="Nama Grup">
 
 <div id="memberContainer">
 
-<input class="memberInput" placeholder="Nama Anggota">
+<input
+class="memberInput"
+placeholder="Nama Anggota">
 
 </div>
 
@@ -221,16 +304,40 @@ Belum ada grup
 </div>
 
 </div>
-<!-- SPLIT BILL -->
-<div id="splitTab" class="tab">
+
+<!-- SPLIT BILL TAB -->
+
+<div
+id="splitTab"
+class="tab">
 
 <div class="card">
 
 <h2>Split Bill</h2>
 
+<h3>
+Pesanan Per Orang
+</h3>
+
+<div id="orderForm">
+
+Belum ada grup dipilih
+
+</div>
+
+<button onclick="loadOrderForm()">
+📝 Buat Form Pesanan
+</button>
+
+<hr>
+
+<h3>
+Nama Tagihan
+</h3>
+
 <input
 id="billName"
-placeholder="Nama Tagihan">
+placeholder="Contoh: Makan Cafe">
 
 <input
 id="billAmount"
@@ -248,18 +355,20 @@ type="number"
 placeholder="Biaya Layanan">
 
 <button onclick="calculateBill()">
-
 💸 Hitung Split Bill
-
 </button>
 
 <div id="billResult"></div>
 
 </div>
 
+<!-- STATUS PEMBAYARAN -->
+
 <div class="card">
 
-<h3>Status Pembayaran</h3>
+<h3>
+Status Pembayaran
+</h3>
 
 <div id="memberList">
 
@@ -267,22 +376,36 @@ Belum pilih grup
 
 </div>
 
+</div>
+
+<!-- REMINDER -->
+
+<div class="card">
+
+<h3>
+Reminder
+</h3>
+
 <button onclick="remindAll()">
-
-🔔 Ingatkan Teman
-
+🔔 Kirim Reminder
 </button>
 
 </div>
 
 </div>
+<!-- ACTIVITY TAB -->
 
-<!-- ACTIVITY -->
-<div id="activityTab" class="tab">
+<div
+id="activityTab"
+class="tab">
+
+<!-- RIWAYAT -->
 
 <div class="card">
 
-<h2>Recent Transactions</h2>
+<h2>
+📜 Riwayat Transaksi
+</h2>
 
 <div id="historyList">
 
@@ -292,9 +415,13 @@ Belum ada transaksi
 
 </div>
 
+<!-- ACTIVE BILLS -->
+
 <div class="card">
 
-<h2>Active Bills</h2>
+<h2>
+💸 Tagihan Aktif
+</h2>
 
 <div id="activeBillsList">
 
@@ -304,9 +431,13 @@ Belum ada tagihan aktif
 
 </div>
 
+<!-- BADGE -->
+
 <div class="card">
 
-<h2>Badge & Points</h2>
+<h2>
+🏆 Badge & Points
+</h2>
 
 <div class="badge-grid">
 
@@ -314,7 +445,9 @@ Belum ada tagihan aktif
 
 🥉
 
-<p>Newbie</p>
+<p>
+Newbie
+</p>
 
 </div>
 
@@ -322,7 +455,9 @@ Belum ada tagihan aktif
 
 🥈
 
-<p>Smart Splitter</p>
+<p>
+Smart Splitter
+</p>
 
 </div>
 
@@ -330,7 +465,9 @@ Belum ada tagihan aktif
 
 🥇
 
-<p>Bill Master</p>
+<p>
+Bill Master
+</p>
 
 </div>
 
@@ -338,21 +475,25 @@ Belum ada tagihan aktif
 
 <div class="points-box">
 
-<h3>Total Points</h3>
+<h3>
+Total Points
+</h3>
 
 <h1 id="userPoints">
-
 0
-
 </h1>
 
 </div>
 
 </div>
 
+<!-- LEADERBOARD -->
+
 <div class="card">
 
-<h2>Leaderboard</h2>
+<h2>
+👑 Leaderboard
+</h2>
 
 <div id="leaderboardList">
 
@@ -362,40 +503,108 @@ Belum ada data
 
 </div>
 
+<!-- EXPORT -->
+
+<div class="card">
+
+<h2>
+📄 Export Laporan
+</h2>
+
+<p>
+Download laporan lengkap transaksi
+</p>
+
 <button onclick="exportData()">
 
-📄 Export Laporan
+📥 Export Laporan
 
 </button>
 
 </div>
 
-<!-- PROFILE -->
-<div id="profileTab" class="tab">
+</div>
+<!-- PROFILE TAB -->
+
+<div
+id="profileTab"
+class="tab">
 
 <div class="card profile-card">
 
-<div class="profile-avatar">
+<!-- FOTO PROFIL -->
+
+<img
+id="profilePreview"
+class="profile-photo"
+style="display:none">
+
+<div
+id="profileAvatar"
+class="profile-avatar">
 
 👤
 
 </div>
 
 <h2 id="profileName">
-
 User
-
 </h2>
 
 <p id="profileEmail">
-
 Email
-
 </p>
+
+<!-- FOTO -->
+
+<input
+type="file"
+id="profilePhoto"
+accept="image/*">
+
+<!-- BIO -->
+
+<textarea
+id="profileBio"
+placeholder="Tulis bio kamu..."
+style="
+width:100%;
+height:100px;
+margin-top:15px;
+padding:15px;
+border-radius:15px;
+background:rgba(255,255,255,.08);
+color:white;
+border:none;
+resize:none;
+">
+</textarea>
+
+<button onclick="saveProfile()">
+
+💾 Simpan Profil
+
+</button>
+
+<!-- POINTS -->
+
+<div class="points-box">
+
+<h3>
+Poin Saya
+</h3>
+
+<h1 id="userPointsProfile">
+0
+</h1>
+
+</div>
+
+<!-- LOGOUT -->
 
 <button onclick="logout()">
 
-Logout
+🚪 Logout
 
 </button>
 
@@ -404,13 +613,14 @@ Logout
 </div>
 
 <!-- NAVBAR -->
+
 <div class="navbar">
 
 <button onclick="openTab('homeTab')">
 
 🏠
 
-<span>Beranda</span>
+<span>Home</span>
 
 </button>
 
@@ -418,7 +628,7 @@ Logout
 
 👥
 
-<span>Grup</span>
+<span>Group</span>
 
 </button>
 
@@ -434,7 +644,7 @@ Logout
 
 📜
 
-<span>Aktivitas</span>
+<span>Activity</span>
 
 </button>
 
@@ -442,7 +652,7 @@ Logout
 
 👤
 
-<span>Profil</span>
+<span>Profile</span>
 
 </button>
 

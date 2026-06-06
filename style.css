@@ -603,3 +603,127 @@ transform:none;
 }
 
 }
+/* ==========================
+   FOTO PROFIL
+========================== */
+
+.profile-photo{
+width:120px;
+height:120px;
+border-radius:50%;
+object-fit:cover;
+border:4px solid #8c52ff;
+margin:auto;
+display:block;
+box-shadow:0 0 20px #8c52ff;
+}
+
+.bio-box{
+margin-top:15px;
+padding:15px;
+border-radius:15px;
+background:rgba(255,255,255,.08);
+}
+
+/* ==========================
+   BUKTI PEMBAYARAN
+========================== */
+
+.payment-proof{
+margin-top:10px;
+padding:10px;
+background:rgba(255,255,255,.08);
+border-radius:10px;
+}
+
+.payment-proof img{
+width:100%;
+border-radius:15px;
+margin-top:10px;
+}
+
+/* ==========================
+   ITEM PESANAN
+========================== */
+
+.order-item{
+padding:10px;
+margin-top:10px;
+border-radius:12px;
+background:rgba(255,255,255,.08);
+display:flex;
+justify-content:space-between;
+}
+
+/* ==========================
+   REMINDER CARD
+========================== */
+
+.reminder-card{
+padding:15px;
+margin-top:15px;
+border-radius:15px;
+background:#ffcc00;
+color:black;
+font-weight:bold;
+}
+
+/* ==========================
+   EXPORT REPORT
+========================== */
+
+.report-card{
+padding:15px;
+margin-top:15px;
+border-radius:15px;
+background:rgba(255,255,255,.08);
+}
+/* ==========================
+FOTO PROFIL PREVIEW
+========================== */
+
+#profilePreview{
+width:120px;
+height:120px;
+border-radius:50%;
+object-fit:cover;
+display:none;
+margin:15px auto;
+border:4px solid #8c52ff;
+box-shadow:0 0 20px #8c52ff;
+}
+
+/* ==========================
+LOGIN GOOGLE SHEET
+========================== */
+
+.login-info{
+padding:12px;
+margin-top:10px;
+border-radius:15px;
+background:rgba(140,82,255,.15);
+border:1px solid rgba(255,255,255,.1);
+}
+
+/* ==========================
+ACTIVE BILL
+========================== */
+
+.active-bill{
+padding:15px;
+margin-top:10px;
+border-radius:15px;
+background:rgba(255,255,255,.05);
+border-left:4px solid #8c52ff;
+}
+
+/* ==========================
+FILE UPLOAD
+========================== */
+
+input[type="file"]{
+padding:12px;
+background:rgba(255,255,255,.08);
+border-radius:15px;
+cursor:pointer;
+}

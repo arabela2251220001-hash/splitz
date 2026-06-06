@@ -1,47 +1,57 @@
-// =====================
-// SPLASH
-// =====================
+// ======================
+// SPLASH SCREEN
+// ======================
 
 setTimeout(() => {
 
-const loginPage =
-document.getElementById("loginPage");
+const splash =
+document.getElementById("splash");
 
-if(loginPage){
-loginPage.classList.add("active");
+if(splash){
+splash.style.display = "none";
 }
 
 },2500);
 
-// =====================
+// ======================
 // GLOBAL
-// =====================
+// ======================
 
 let selectedGroup = null;
+const SHEET_URL =
+"https://script.google.com/macros/s/AKfycbzZmp-YZNZ9gk131E8aFozE9EQqNUrQDaFtauQkA40wRJbCsHb8RNbz-aJvJ1uF1q8/exec";
 
-// =====================
+// ======================
 // AUTH
-// =====================
+// ======================
 
 function showRegister(){
 
-document.getElementById("loginPage")
+document
+.getElementById("loginPage")
 .classList.remove("active");
 
-document.getElementById("registerPage")
+document
+.getElementById("registerPage")
 .classList.add("active");
 
 }
 
 function showLogin(){
 
-document.getElementById("registerPage")
+document
+.getElementById("registerPage")
 .classList.remove("active");
 
-document.getElementById("loginPage")
+document
+.getElementById("loginPage")
 .classList.add("active");
 
 }
+
+// ======================
+// REGISTER
+// ======================
 
 function register(){
 
@@ -51,21 +61,17 @@ document.getElementById("regName").value.trim();
 const email =
 document.getElementById("regEmail").value.trim();
 
-const password =
-document.getElementById("regPassword").value.trim();
+if(!name || !email){
 
-if(!name || !email || !password){
-
-alert("Lengkapi semua data");
+alert("Lengkapi data");
 return;
 
 }
 
 const user = {
 
-name:name,
-email:email,
-password:password,
+name,
+email,
 points:0
 
 };
@@ -81,86 +87,148 @@ showLogin();
 
 }
 
+// ======================
+// LOGIN
+// ======================
+
 function login(){
 
-const user =
+const savedUser =
 JSON.parse(
 localStorage.getItem("user")
 );
 
-if(!user){
+if(!savedUser){
 
 alert("Silakan daftar terlebih dahulu");
 return;
 
 }
 
+const name =
+document.getElementById("loginName").value.trim();
+
 const email =
 document.getElementById("loginEmail").value.trim();
 
-const password =
-document.getElementById("loginPassword").value.trim();
-
 if(
-email === user.email &&
-password === user.password
+
+name === savedUser.name &&
+email === savedUser.email
+
 ){
 
-document.getElementById("loginPage")
+// simpan login terakhir
+
+localStorage.setItem(
+"currentUser",
+JSON.stringify(savedUser)
+);
+
+// kirim ke spreadsheet
+fetch(SHEET_URL,{
+    method:"POST",
+    body:JSON.stringify({
+        nama:savedUser.name,
+        email:savedUser.email,
+        waktu:new Date().toLocaleString()
+    })
+})
+.then(res=>res.text())
+.then(data=>console.log("Login tercatat:",data))
+.catch(err=>console.log(err));
+
+
+document
+.getElementById("loginPage")
 .classList.remove("active");
 
-document.getElementById("appPage")
+document
+.getElementById("registerPage")
+.classList.remove("active");
+
+document
+.getElementById("appPage")
 .classList.add("active");
 
 loadUser();
-loadGroups();
-loadTransactions();
-updateStatistics();
-updateDashboard();
-loadLeaderboard();
 
 }else{
 
-alert("Email atau password salah");
+alert("Nama atau email salah");
 
 }
 
 }
 
-// =====================
+// ======================
 // USER
-// =====================
+// ======================
 
 function loadUser(){
 
 const user =
 JSON.parse(
-localStorage.getItem("user")
+localStorage.getItem("currentUser")
 );
 
 if(!user) return;
 
-document.getElementById("welcomeText")
-.innerHTML =
+const welcome =
+document.getElementById("welcomeText");
+
+if(welcome){
+
+welcome.innerHTML =
 `Hai ${user.name} 👋`;
 
-document.getElementById("profileName")
-.innerText =
+}
+
+const profileName =
+document.getElementById("profileName");
+
+if(profileName){
+
+profileName.innerText =
 user.name;
 
-document.getElementById("profileEmail")
-.innerText =
+}
+
+const profileEmail =
+document.getElementById("profileEmail");
+
+if(profileEmail){
+
+profileEmail.innerText =
 user.email;
 
-document.getElementById("userPoints")
-.innerText =
+}
+
+const points =
+document.getElementById("userPoints");
+
+if(points){
+
+points.innerText =
 user.points || 0;
 
 }
 
-// =====================
-// NAVIGATION
-// =====================
+const pointsProfile =
+document.getElementById("userPointsProfile");
+
+if(pointsProfile){
+
+pointsProfile.innerText =
+user.points || 0;
+
+}
+
+}
+
+// ======================
+// TAB
+// ======================
 
 function openTab(tabId){
 
@@ -178,25 +246,25 @@ document
 
 }
 
-// =====================
+// ======================
 // FORMAT RUPIAH
-// =====================
+// ======================
 
 function rupiah(angka){
 
 return new Intl.NumberFormat(
-'id-ID',
+"id-ID",
 {
-style:'currency',
-currency:'IDR',
+style:"currency",
+currency:"IDR",
 minimumFractionDigits:0
 }
 ).format(angka);
 
 }
-// =====================
+// ======================
 // GROUP
-// =====================
+// ======================
 
 function addMember(){
 
@@ -218,15 +286,23 @@ document
 function createGroup(){
 
 const groupName =
-document.getElementById("groupName")
-.value.trim();
+document
+.getElementById("groupName")
+.value
+.trim();
 
-const memberInputs =
-document.querySelectorAll(".memberInput");
+if(!groupName){
 
-let members = [];
+alert("Masukkan nama grup");
+return;
 
-memberInputs.forEach(input=>{
+}
+
+const members = [];
+
+document
+.querySelectorAll(".memberInput")
+.forEach(input=>{
 
 const nama =
 input.value.trim();
@@ -236,24 +312,20 @@ if(nama){
 members.push({
 
 nama:nama,
-status:false
+status:false,
+bukti:"",
+pesanan:[],
+totalPesanan:0
 
 });
 
 }
 
 });
-
-if(!groupName){
-
-alert("Masukkan nama grup");
-return;
-
-}
 
 if(members.length === 0){
 
-alert("Masukkan minimal 1 anggota");
+alert("Minimal 1 anggota");
 return;
 
 }
@@ -275,10 +347,14 @@ localStorage.setItem(
 JSON.stringify(groups)
 );
 
-document.getElementById("groupName")
+alert("Grup berhasil dibuat");
+
+document
+.getElementById("groupName")
 .value = "";
 
-document.getElementById("memberContainer")
+document
+.getElementById("memberContainer")
 .innerHTML = `
 
 <input
@@ -287,12 +363,14 @@ placeholder="Nama Anggota">
 
 `;
 
-alert("Grup berhasil dibuat");
-
 loadGroups();
 updateStatistics();
 
 }
+
+// ======================
+// LOAD GROUP
+// ======================
 
 function loadGroups(){
 
@@ -322,8 +400,11 @@ html += `
 👥 ${group.members.length} anggota
 </p>
 
-<button onclick="selectGroup(${index})">
+<button
+onclick="selectGroup(${index})">
+
 Gunakan Grup
+
 </button>
 
 </div>
@@ -334,13 +415,31 @@ Gunakan Grup
 
 }
 
-document.getElementById("groupList")
-.innerHTML = html;
+const groupList =
+document.getElementById("groupList");
 
-document.getElementById("groupPreview")
-.innerHTML = html;
+if(groupList){
+
+groupList.innerHTML =
+html;
 
 }
+
+const preview =
+document.getElementById("groupPreview");
+
+if(preview){
+
+preview.innerHTML =
+html;
+
+}
+
+}
+
+// ======================
+// PILIH GROUP
+// ======================
 
 function selectGroup(index){
 
@@ -355,24 +454,25 @@ groups[index];
 selectedGroup.groupIndex =
 index;
 
-loadMembers();
-
 alert(
-"Grup aktif: " +
+"Grup aktif : " +
 selectedGroup.name
 );
 
+loadMembers();
+
 }
 
-// =====================
+// ======================
 // STATUS PEMBAYARAN
-// =====================
+// ======================
 
 function loadMembers(){
 
 if(!selectedGroup){
 
-document.getElementById("memberList")
+document
+.getElementById("memberList")
 .innerHTML =
 "Belum pilih grup";
 
@@ -380,57 +480,7 @@ return;
 
 }
 
-let total =
-selectedGroup.members.length;
-
-let paid =
-selectedGroup.members.filter(
-member => member.status === true
-).length;
-
-let percent =
-total > 0
-?
-Math.round((paid / total) * 100)
-:
-0;
-
-let html = `
-
-<div class="group-item">
-
-<h4>Progress Pembayaran</h4>
-
-<p>
-${paid}/${total} anggota sudah bayar
-</p>
-
-<div style="
-height:10px;
-background:#333;
-border-radius:20px;
-overflow:hidden;
-margin-top:10px;
-">
-
-<div style="
-height:100%;
-width:${percent}%;
-background:#37d67a;
-transition:.3s;
-">
-
-</div>
-
-</div>
-
-<p style="margin-top:10px">
-${percent}%
-</p>
-
-</div>
-
-`;
+let html = "";
 
 selectedGroup.members.forEach((member,index)=>{
 
@@ -439,28 +489,22 @@ html += `
 <div class="member-item">
 
 <div>
+
 <b>${member.nama}</b>
-</div>
 
-<div>
-
-<div class="${
-member.status
-?
-'status-paid'
-:
-'status-unpaid'
-}">
+<br>
 
 ${
 member.status
 ?
-'🟢 Lunas'
+"🟢 Lunas"
 :
-'🟡 Belum'
+"🟡 Belum Bayar"
 }
 
 </div>
+
+<div>
 
 <button
 onclick="togglePayment(${index})">
@@ -468,9 +512,9 @@ onclick="togglePayment(${index})">
 ${
 member.status
 ?
-'↩ Batal'
+"Batalkan"
 :
-'✔ Sudah Bayar'
+"Lunas"
 }
 
 </button>
@@ -483,35 +527,33 @@ member.status
 
 });
 
-document.getElementById("memberList")
-.innerHTML = html;
+document
+.getElementById("memberList")
+.innerHTML =
+html;
 
 }
-// =====================
-// TOGGLE PEMBAYARAN
-// =====================
+
+// ======================
+// TOGGLE BAYAR
+// ======================
 
 function togglePayment(index){
+
+if(!selectedGroup) return;
 
 let groups =
 JSON.parse(
 localStorage.getItem("groups")
 ) || [];
 
-if(
-selectedGroup === null ||
-selectedGroup.groupIndex === undefined
-){
-return;
-}
-
-let gIndex =
+let g =
 selectedGroup.groupIndex;
 
-groups[gIndex]
+groups[g]
 .members[index]
 .status =
-!groups[gIndex]
+!groups[g]
 .members[index]
 .status;
 
@@ -521,10 +563,10 @@ JSON.stringify(groups)
 );
 
 selectedGroup =
-groups[gIndex];
+groups[g];
 
 selectedGroup.groupIndex =
-gIndex;
+g;
 
 loadMembers();
 updateStatistics();
@@ -532,132 +574,153 @@ loadLeaderboard();
 
 }
 
-// =====================
-// REMINDER
-// =====================
+// ======================
+// DASHBOARD
+// ======================
 
-function remindAll(){
-
-alert(
-"🔔 Reminder berhasil dikirim!"
-);
-
-}
-
-// =====================
-// STATISTIK DASHBOARD
-// =====================
-
-function updateStatistics(){
-
-let groups =
-JSON.parse(
-localStorage.getItem("groups")
-) || [];
+function updateDashboard(){
 
 let history =
 JSON.parse(
 localStorage.getItem("history")
 ) || [];
 
-let totalPaid = 0;
+let total = 0;
 
-groups.forEach(group=>{
+history.forEach(item=>{
 
-group.members.forEach(member=>{
-
-if(member.status){
-totalPaid++;
-}
+total += item.total;
 
 });
 
-});
+const totalEl =
+document.getElementById(
+"dashboardTotal"
+);
 
-const totalGroupsEl =
-document.getElementById("totalGroups");
+if(totalEl){
 
-const totalTransactionsEl =
-document.getElementById("totalTransactions");
-
-const paidMembersEl =
-document.getElementById("paidMembers");
-
-const activeBillsEl =
-document.getElementById("activeBillsCount");
-
-if(totalGroupsEl)
-totalGroupsEl.innerText =
-groups.length;
-
-if(totalTransactionsEl)
-totalTransactionsEl.innerText =
-history.length;
-
-if(paidMembersEl)
-paidMembersEl.innerText =
-totalPaid;
-
-if(activeBillsEl)
-activeBillsEl.innerText =
-history.length;
+totalEl.innerText =
+rupiah(total);
 
 }
 
-// =====================
-// LEADERBOARD
-// =====================
+}
 
-function loadLeaderboard(){
+// ======================
+// STATISTIK
+// ======================
 
+function updateStatistics(){
+
+let history =
+JSON.parse(
+localStorage.getItem("history")
+) || [];
 let groups =
 JSON.parse(
 localStorage.getItem("groups")
 ) || [];
+let paid = 0;
 
-let scores = {};
+groups.forEach(group => {
 
-groups.forEach(group=>{
+    if(!Array.isArray(group.members)){
+        return;
+    }
 
-group.members.forEach(member=>{
+    group.members.forEach(member => {
 
-if(!scores[member.nama]){
-scores[member.nama] = 0;
-}
+        if(member.status){
+            paid++;
+        }
 
-if(member.status){
-scores[member.nama] += 10;
-}
+    });
 
 });
 
-});
 
-let ranking =
-Object.entries(scores)
-.sort((a,b)=>b[1]-a[1]);
+const totalGroups =
+document.getElementById(
+"totalGroups"
+);
+
+if(totalGroups){
+
+totalGroups.innerText =
+groups.length;
+
+}
+
+const totalTransactions =
+document.getElementById(
+"totalTransactions"
+);
+
+if(totalTransactions){
+
+totalTransactions.innerText =
+history.length;
+
+}
+
+const paidMembers =
+document.getElementById(
+"paidMembers"
+);
+
+if(paidMembers){
+
+paidMembers.innerText =
+paid;
+
+}
+
+const activeBills =
+document.getElementById(
+"activeBillsCount"
+);
+
+if(activeBills){
+
+activeBills.innerText =
+history.length;
+
+}
+
+}
+// ======================
+// FORM PESANAN
+// ======================
+
+function loadOrderForm(){
+
+if(!selectedGroup){
+
+alert("Pilih grup terlebih dahulu");
+return;
+
+}
 
 let html = "";
 
-if(ranking.length === 0){
-
-html = "Belum ada data";
-
-}else{
-
-ranking.forEach((item,index)=>{
+selectedGroup.members.forEach((member,index)=>{
 
 html += `
 
-<div class="leader-item">
+<div class="group-item">
 
-<span>
-${index + 1}. ${item[0]}
-</span>
+<h4>${member.nama}</h4>
 
-<span>
-⭐ ${item[1]}
-</span>
+<input
+type="text"
+id="menu${index}"
+placeholder="Nama Menu">
+
+<input
+type="number"
+id="harga${index}"
+placeholder="Harga Menu">
 
 </div>
 
@@ -665,74 +728,99 @@ ${index + 1}. ${item[0]}
 
 });
 
-}
-
-const leaderboard =
-document.getElementById(
-"leaderboardList"
-);
-
-if(leaderboard){
-leaderboard.innerHTML = html;
-}
+document
+.getElementById("orderForm")
+.innerHTML =
+html;
 
 }
-// =====================
-// SPLIT BILL
-// =====================
+
+// ======================
+// HITUNG SPLIT BILL
+// ======================
 
 function calculateBill(){
 
 if(!selectedGroup){
 
-alert(
-"Pilih grup terlebih dahulu"
-);
-
+alert("Pilih grup terlebih dahulu");
 return;
 
 }
 
 const billName =
-document.getElementById("billName")
-.value.trim();
-
-const bill =
-parseFloat(
-document.getElementById("billAmount").value
-) || 0;
+document
+.getElementById("billName")
+.value
+.trim();
 
 const tax =
 parseFloat(
-document.getElementById("taxAmount").value
+document
+.getElementById("taxAmount")
+.value
 ) || 0;
 
 const service =
 parseFloat(
-document.getElementById("serviceAmount").value
+document
+.getElementById("serviceAmount")
+.value
 ) || 0;
 
-if(bill <= 0){
+let totalPesanan = 0;
 
-alert(
-"Masukkan total tagihan"
-);
+selectedGroup.members.forEach((member,index)=>{
 
-return;
+const menu =
+document
+.getElementById(`menu${index}`)
+?.value || "";
 
+const harga =
+parseFloat(
+document
+.getElementById(`harga${index}`)
+?.value
+) || 0;
+
+member.pesanan = [
+
+{
+menu:menu,
+harga:harga
 }
 
+];
+
+member.totalPesanan =
+harga;
+
+totalPesanan += harga;
+
+});
+
 const total =
-bill + tax + service;
+totalPesanan +
+tax +
+service;
 
-const people =
-selectedGroup.members.length;
+selectedGroup.members.forEach(member=>{
 
-const perPerson =
-total / people;
+const proporsi =
+member.totalPesanan /
+totalPesanan;
 
-document.getElementById("billResult")
-.innerHTML = `
+member.tagihan =
+Math.round(
+member.totalPesanan +
+(tax * proporsi) +
+(service * proporsi)
+);
+
+});
+
+let result = `
 
 <div class="result-card">
 
@@ -740,58 +828,200 @@ document.getElementById("billResult")
 ${billName || "Tagihan"}
 </h3>
 
-<br>
-
 <p>
-Tagihan: ${rupiah(bill)}
+Total Pesanan :
+${rupiah(totalPesanan)}
 </p>
 
 <p>
-Pajak: ${rupiah(tax)}
+Pajak :
+${rupiah(tax)}
 </p>
 
 <p>
-Biaya Layanan: ${rupiah(service)}
+Service :
+${rupiah(service)}
 </p>
-
-<br>
 
 <h2>
-Total: ${rupiah(total)}
+Total :
+${rupiah(total)}
 </h2>
 
-<br>
-
-<h1>
-${rupiah(perPerson)}
-</h1>
-
-<p>
-per orang
-</p>
-
-</div>
+<hr>
 
 `;
 
+selectedGroup.members.forEach(member=>{
+
+result += `
+
+<p>
+
+${member.nama}
+
+=
+<b>
+
+${rupiah(member.tagihan)}
+
+</b>
+
+</p>
+
+`;
+
+});
+
+result += `</div>`;
+
+document
+.getElementById("billResult")
+.innerHTML =
+result;
+
 saveTransaction(
 billName,
-total,
-perPerson
+total
 );
 
-givePoints(10);
+saveGroupData();
+
+loadMembers();
 
 }
 
-// =====================
-// TRANSAKSI
-// =====================
+// ======================
+// SIMPAN GROUP
+// ======================
+
+function saveGroupData(){
+
+let groups =
+JSON.parse(
+localStorage.getItem("groups")
+) || [];
+
+groups[
+selectedGroup.groupIndex
+] =
+selectedGroup;
+
+localStorage.setItem(
+"groups",
+JSON.stringify(groups)
+);
+
+}
+
+// ======================
+// UPLOAD BUKTI
+// ======================
+
+function uploadProof(index){
+
+const input =
+document.createElement("input");
+
+input.type = "file";
+
+input.accept =
+"image/*";
+
+input.onchange =
+function(e){
+
+const file =
+e.target.files[0];
+
+if(!file) return;
+
+const reader =
+new FileReader();
+
+reader.onload =
+function(){
+
+selectedGroup
+.members[index]
+.bukti =
+reader.result;
+
+selectedGroup
+.members[index]
+.status =
+true;
+
+saveGroupData();
+
+loadMembers();
+
+updateStatistics();
+
+loadLeaderboard();
+
+alert(
+"✅ Bukti berhasil diupload dan status otomatis lunas"
+);
+
+};
+
+reader.readAsDataURL(file);
+
+};
+
+input.click();
+
+}
+
+// ======================
+// REMINDER
+// ======================
+
+function remindAll(){
+
+if(!selectedGroup){
+
+alert("Pilih grup dulu");
+return;
+
+}
+
+let belumBayar =
+selectedGroup.members
+.filter(
+m => !m.status
+);
+
+if(belumBayar.length === 0){
+
+alert(
+"Semua anggota sudah bayar"
+);
+
+return;
+
+}
+
+let nama =
+belumBayar
+.map(m=>m.nama)
+.join(", ");
+
+alert(
+"🔔 Reminder dikirim ke:\n\n" +
+nama
+);
+
+}
+
+// ======================
+// SIMPAN TRANSAKSI
+// ======================
 
 function saveTransaction(
 billName,
-total,
-perPerson
+total
 ){
 
 let history =
@@ -801,17 +1031,21 @@ localStorage.getItem("history")
 
 history.unshift({
 
-billName:
+nama:
 billName || "Tagihan",
 
-date:
+tanggal:
 new Date().toLocaleString(),
 
 total:
 total,
 
-perPerson:
-perPerson
+group:
+selectedGroup
+?
+selectedGroup.name
+:
+"-"
 
 });
 
@@ -825,6 +1059,10 @@ updateDashboard();
 updateStatistics();
 
 }
+
+// ======================
+// LOAD TRANSAKSI
+// ======================
 
 function loadTransactions(){
 
@@ -848,22 +1086,13 @@ html += `
 
 <div class="group-item">
 
-<h4>
-${item.billName}
-</h4>
+<h4>${item.nama}</h4>
 
-<p>
-📅 ${item.date}
-</p>
+<p>📅 ${item.tanggal}</p>
 
-<p>
-💰 ${rupiah(item.total)}
-</p>
+<p>👥 ${item.group}</p>
 
-<p>
-👤 ${rupiah(item.perPerson)}
- / orang
-</p>
+<p>💰 ${rupiah(item.total)}</p>
 
 </div>
 
@@ -873,16 +1102,25 @@ ${item.billName}
 
 }
 
-document.getElementById("historyList")
-.innerHTML = html;
+const list =
+document.getElementById(
+"historyList"
+);
+
+if(list){
+
+list.innerHTML =
+html;
+
+}
 
 loadActiveBills();
 
 }
 
-// =====================
+// ======================
 // ACTIVE BILLS
-// =====================
+// ======================
 
 function loadActiveBills(){
 
@@ -900,19 +1138,17 @@ html =
 
 }else{
 
-history.slice(0,5).forEach(item=>{
+history
+.slice(0,5)
+.forEach(item=>{
 
 html += `
 
 <div class="group-item">
 
-<h4>
-${item.billName}
-</h4>
+<h4>${item.nama}</h4>
 
-<p>
-${rupiah(item.total)}
-</p>
+<p>${rupiah(item.total)}</p>
 
 </div>
 
@@ -922,74 +1158,23 @@ ${rupiah(item.total)}
 
 }
 
-const activeBills =
+const target =
 document.getElementById(
 "activeBillsList"
 );
 
-if(activeBills){
-activeBills.innerHTML = html;
-}
+if(target){
+
+target.innerHTML =
+html;
 
 }
 
-// =====================
-// POINTS
-// =====================
-
-function givePoints(value){
-
-let user =
-JSON.parse(
-localStorage.getItem("user")
-);
-
-if(!user) return;
-
-user.points =
-(user.points || 0)
-+ value;
-
-localStorage.setItem(
-"user",
-JSON.stringify(user)
-);
-
-document.getElementById("userPoints")
-.innerText =
-user.points;
-
 }
 
-// =====================
-// DASHBOARD
-// =====================
-
-function updateDashboard(){
-
-let history =
-JSON.parse(
-localStorage.getItem("history")
-) || [];
-
-let total = 0;
-
-history.forEach(item=>{
-
-total += item.total;
-
-});
-
-document.getElementById(
-"dashboardTotal"
-).innerText =
-rupiah(total);
-
-}
-
-// =====================
-// EXPORT LAPORAN
-// =====================
+// ======================
+// EXPORT LAPORAN FULL
+// ======================
 
 function exportData(){
 
@@ -998,78 +1183,341 @@ JSON.parse(
 localStorage.getItem("history")
 ) || [];
 
-let text =
+let groups =
+JSON.parse(
+localStorage.getItem("groups")
+) || [];
+
+let laporan = "";
+
+laporan +=
 "===== LAPORAN SPLITZ =====\n\n";
+
+laporan +=
+"RIWAYAT TRANSAKSI\n\n";
 
 history.forEach(item=>{
 
-text +=
-item.billName +
-" | " +
+laporan +=
+"Nama : " +
+item.nama +
+"\n";
+
+laporan +=
+"Tanggal : " +
+item.tanggal +
+"\n";
+
+laporan +=
+"Grup : " +
+item.group +
+"\n";
+
+laporan +=
+"Total : " +
 rupiah(item.total) +
+"\n";
+
+laporan +=
+"--------------------\n";
+
+});
+
+laporan +=
+"\n\nDATA GROUP\n\n";
+
+groups.forEach(group=>{
+
+laporan +=
+"\nGRUP : " +
+group.name +
+"\n";
+
+group.members.forEach(member=>{
+
+laporan +=
+"- " +
+member.nama +
+"\n";
+
+if(member.tagihan){
+
+laporan +=
+"  Tagihan : " +
+rupiah(member.tagihan)
++
+"\n";
+
+}
+
+laporan +=
+"  Status : "
++
+(
+member.status
+?
+"Lunas"
+:
+"Belum Bayar"
+)
++
 "\n";
 
 });
 
-let blob =
+});
+
+const blob =
 new Blob(
-[text],
-{type:"text/plain"}
+[laporan],
+{
+type:"text/plain"
+}
 );
 
-let a =
+const a =
 document.createElement("a");
 
 a.href =
 URL.createObjectURL(blob);
 
 a.download =
-"laporan_splitz.txt";
+"Laporan_Splitz.txt";
 
 a.click();
 
 }
 
-// =====================
+// ======================
+// LEADERBOARD
+// ======================
+
+function loadLeaderboard(){
+
+let groups =
+JSON.parse(
+localStorage.getItem("groups")
+) || [];
+
+let score = {};
+
+groups.forEach(group => {
+
+    if(!Array.isArray(group.members)){
+        return;
+    }
+
+    group.members.forEach(member => {
+
+        if(!score[member.nama]){
+            score[member.nama] = 0;
+        }
+
+        if(member.status){
+            score[member.nama] += 10;
+        }
+
+    });
+
+});
+
+const ranking =
+Object.entries(score)
+.sort(
+(a,b)=>
+b[1]-a[1]
+);
+
+let html = "";
+
+if(ranking.length === 0){
+
+html =
+"Belum ada data";
+
+}else{
+
+ranking.forEach(
+(item,index)=>{
+
+html += `
+
+<div class="leader-item">
+
+<span>
+
+${index+1}.
+${item[0]}
+
+</span>
+
+<span>
+
+⭐ ${item[1]}
+
+</span>
+
+</div>
+
+`;
+
+});
+
+}
+
+const board =
+document.getElementById(
+"leaderboardList"
+);
+
+if(board){
+
+board.innerHTML =
+html;
+
+}
+
+}
+
+// ======================
+// PROFIL
+// ======================
+
+function saveProfile(){
+
+const bio =
+document
+.getElementById("profileBio")
+.value;
+
+localStorage.setItem(
+"profileBio",
+bio
+);
+
+const file =
+document
+.getElementById("profilePhoto")
+.files[0];
+
+if(file){
+
+const reader =
+new FileReader();
+
+reader.onload =
+function(){
+
+localStorage.setItem(
+"profilePhoto",
+reader.result
+);
+
+showProfilePhoto();
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+alert(
+"Profil berhasil disimpan"
+);
+
+}
+
+function showProfilePhoto(){
+
+const img =
+localStorage.getItem(
+"profilePhoto"
+);
+
+const preview =
+document.getElementById(
+"profilePreview"
+);
+
+if(
+img &&
+preview
+){
+
+preview.src =
+img;
+
+preview.style.display =
+"block";
+
+}
+
+}
+
+function loadProfile(){
+
+const bio =
+localStorage.getItem(
+"profileBio"
+);
+
+if(bio){
+
+document
+.getElementById("profileBio")
+.value =
+bio;
+
+}
+
+showProfilePhoto();
+
+}
+
+// ======================
 // LOGOUT
-// =====================
+// ======================
 
 function logout(){
 
-if(
-confirm("Logout?")
-){
+localStorage.removeItem(
+"currentUser"
+);
 
 location.reload();
 
 }
 
-}
-
-// =====================
+// ======================
 // AUTO LOGIN
-// =====================
+// ======================
 
 window.onload = ()=>{
 
-const user =
+loadProfile();
+
+const currentUser =
 JSON.parse(
-localStorage.getItem("user")
+localStorage.getItem(
+"currentUser"
+)
 );
 
-if(user){
+if(currentUser){
 
-document.getElementById("loginPage")
+document
+.getElementById("loginPage")
 .classList.remove("active");
 
-document.getElementById("appPage")
+document
+.getElementById("appPage")
 .classList.add("active");
 
 loadUser();
 loadGroups();
 loadTransactions();
-updateStatistics();
 updateDashboard();
+updateStatistics();
 loadLeaderboard();
 
 }
